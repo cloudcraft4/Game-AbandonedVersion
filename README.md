@@ -1,2 +1,4 @@
 # Roguelike-Game
-The start of my roguelike game written in Python
+
+This is the pre-Alpha version of my new roguelike game (which I am making purely for my own enjoyment).  Much thanks to João F. Henriques for his excelent tutorial on how to make roguelikes in Python.
+I am using the Libtcod 1.7.0 API.
