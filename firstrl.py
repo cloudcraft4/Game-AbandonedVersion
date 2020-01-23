@@ -101,13 +101,6 @@ class Rect:
         #returns true if this rectangle intersects with another one
         return (self.x1 <= other.x2 and self.x2 >= other.x1 and
                 self.y1 <= other.y2 and self.y2 >= other.y1)
- 
-class Skill:
-    def __init__(self, skill_ability):
-        self.skill_ability = skill_ability
-
-        def firebreath:
-
 
 class Object:
     #this is a generic object: the player, a monster, an item, the stairs...
@@ -924,7 +917,7 @@ def menu(header, options, width):
     index = key.c - ord('a')
     if index >= 0 and index < len(options): return index
     return None
- 
+
 def inventory_menu(header):
     #show a menu with each item of the inventory as an option
     if len(inventory) == 0:
@@ -1071,17 +1064,23 @@ def check_level_up():
  
         skill_choice = None
         while skill_choice == None:  #keep asking until a choice is made
-            skill_choice = menu('Now choose a skill to raise:\n',
-                          ['Firebreath',
-                           'Thorn Armor (damage enemies when hit)',
-                           'Regeneration (Slow life regen)'], LEVEL_SCREEN_WIDTH)
+            skill_choice = menu(available_skill_list, LEVEL_SCREEN_WIDTH)
         
-        if skill_choice == 0:
+        if available_skill_list[skill_choice] == 'Firebreath':
             skill_list.append('Firebreath')
-        elif skill_choice == 1:
-            skill_list.append('Thorn Armor')    
-        elif skill_choice == 2:
+            available_skill_list.remove('Firebreath')
+            available_skill_list.append('Firebreath 2')
+        elif available_skill_list[skill_choice] == 'Thorn Armor':
+            skill_list.append('Thorn Armor')
+            available_skill_list.remove('Thorn Armor')   
+        elif available_skill_list[skill_choice] == 'Regeneration':
             skill_list.append('Regeneration')
+            available_skill_list.remove('Regeneration')
+            available_skill_list.append('Heal')
+        elif available_skill_list[skill_choice] == 'Firebreath 2':
+            skill_list.append('Firebreath 2')
+            available_skill_list.remove('Firebreath 2')
+
            
 
 
@@ -1223,6 +1222,7 @@ def save_game():
     file['game_state'] = game_state
     file['dungeon_level'] = dungeon_level
     file['skill_list'] = skill_list
+    file['available_skill_list'] = available_skill_list
     file.close()
  
 def load_game():
@@ -1238,6 +1238,7 @@ def load_game():
     game_msgs = file['game_msgs']
     game_state = file['game_state']
     skill_list = file['skill_list']
+    available_skill_list = file['available_skill_list']
     dungeon_level = file['dungeon_level']
     file.close()
  
@@ -1263,6 +1264,9 @@ def new_game():
     #create the list of skills that a player has, starts empty
     skill_list = []
     
+    #create the list of skills that a player is able to get
+    available_skill_list = ['regeneration', 'thorn armor', 'firebreath']
+
     #create the list of game messages and their colors, starts empty
     game_msgs = []
  
