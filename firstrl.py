@@ -101,8 +101,6 @@ class Rect:
         #returns true if this rectangle intersects with another one
         return (self.x1 <= other.x2 and self.x2 >= other.x1 and
                 self.y1 <= other.y2 and self.y2 >= other.y1)
-<<<<<<< HEAD
-=======
  
 class Skill:
     def __init__(self, name, skill_power):
@@ -191,7 +189,6 @@ class Skill:
         #    "Code for visual outline"
         #    "return(list? of every item in area) Then actual code later will check if flamable, etc
 
->>>>>>> bfcbbd23f3d2e02454a65254c7d9d66f58b4a761
 
 class Object:
     #this is a generic object: the player, a monster, an item, the stairs...
@@ -1173,7 +1170,7 @@ def check_level_up():
  
         skill_choice = None
         while skill_choice == None:  #keep asking until a choice is made
-<<<<<<< HEAD
+
             skill_choice = menu(available_skill_list, LEVEL_SCREEN_WIDTH)
         
         if available_skill_list[skill_choice] == 'Firebreath':
@@ -1184,18 +1181,6 @@ def check_level_up():
             skill_list.append('Thorn Armor')
             available_skill_list.remove('Thorn Armor')   
         elif available_skill_list[skill_choice] == 'Regeneration':
-=======
-            skill_choice = menu('Now choose a skill to raise:\n',
-                          ['Burning Touch',
-                           'Thorn Armor (damage enemies when hit)',
-                           'Regeneration (Slow life regen)'], LEVEL_SCREEN_WIDTH)
-        
-        if skill_choice == 0:
-            skill_list.append('Burning Touch')
-        elif skill_choice == 1:
-            skill_list.append('Thorn Armor')    
-        elif skill_choice == 2:
->>>>>>> bfcbbd23f3d2e02454a65254c7d9d66f58b4a761
             skill_list.append('Regeneration')
             available_skill_list.remove('Regeneration')
             available_skill_list.append('Heal')
@@ -1203,8 +1188,7 @@ def check_level_up():
             skill_list.append('Firebreath 2')
             available_skill_list.remove('Firebreath 2')
 
-           
-
+        
 
 def player_death(player):
     #the game ended!
