@@ -42,7 +42,7 @@ FIREBALL_RADIUS = 3
 FIREBALL_DAMAGE = 25
  
 #experience and level-ups
-LEVEL_UP_BASE = 200
+LEVEL_UP_BASE = 20
 LEVEL_UP_FACTOR = 150
  
  
@@ -101,6 +101,97 @@ class Rect:
         #returns true if this rectangle intersects with another one
         return (self.x1 <= other.x2 and self.x2 >= other.x1 and
                 self.y1 <= other.y2 and self.y2 >= other.y1)
+<<<<<<< HEAD
+=======
+ 
+class Skill:
+    def __init__(self, name, skill_power):
+        self.name = name
+        self.skill_power = skill_power
+        #self.caster = caster
+        #self.effect = effect
+        #self.skill_range = skill_range
+        #self.element = element
+        #self.aoe = aoe
+        #self.dot = dot
+
+    def input_skill_direction(self):
+        key = libtcod.console_wait_for_keypress(True)
+ 
+        if key.vk == libtcod.KEY_UP or key.vk == libtcod.KEY_KP8 or key.vk == libtcod.KEY_8:
+            check_skill_target(0, -1)
+            return target
+        elif key.vk == libtcod.KEY_DOWN or key.vk == libtcod.KEY_KP2 or key.vk == libtcod.KEY_2:
+            check_skill_target(0, 1)
+            return target
+        elif key.vk == libtcod.KEY_LEFT or key.vk == libtcod.KEY_KP4 or key.vk == libtcod.KEY_4:
+            check_skill_target(-1, 0)
+            return target
+        elif key.vk == libtcod.KEY_RIGHT or key.vk == libtcod.KEY_KP6 or key.vk == libtcod.KEY_6:
+            check_skill_target(1, 0)
+            return target
+        elif key.vk == libtcod.KEY_HOME or key.vk == libtcod.KEY_KP7 or key.vk == libtcod.KEY_7:
+            check_skill_target(-1, -1)
+            return target
+        elif key.vk == libtcod.KEY_PAGEUP or key.vk == libtcod.KEY_KP9 or key.vk == libtcod.KEY_9:
+            check_skill_target(1, -1)
+            return target
+        elif key.vk == libtcod.KEY_END or key.vk == libtcod.KEY_KP1 or key.vk == libtcod.KEY_1:
+            check_skill_target(-1, 1)
+            return target
+        elif key.vk == libtcod.KEY_PAGEDOWN or key.vk == libtcod.KEY_KP3 or key.vk == libtcod.KEY_3:
+            check_skill_target(1, 1)
+            return target
+
+    def burning_touch(self, skill_power):
+        self.input_skill_direction(target)
+        self.skill_attack(target, skill_power)
+        
+    def skill_attack(self, target, skill_power):
+        #a simple formula for attack damage
+        damage = skill_power - target.fighter.defense
+ 
+        if damage > 0:
+            #make the target take some damage
+            message(self.owner.name.capitalize() + ' blasts ' + target.name + ' with magic for ' + str(damage) + ' hit points.')
+            target.fighter.take_damage(damage)
+        else:
+            message(self.owner.name.capitalize() + ' blasts ' + target.name + ' with magic but it has no effect!')    
+
+        #def beam_target(self):
+        #    new_x = caster_x
+        #    new_y = caster_y
+
+        #    "code for user to pick enemy in los"
+
+            #vector from this object to the target, and distance
+        #    dx = target_x - caster.x
+        #    dy = target_y - caster.y
+        #    distance = math.sqrt(dx ** 2 + dy ** 2)
+
+            #if distance <= skill_range:
+            #    "check to see if stuff in objects = .y and .x"
+                
+                #While new_x != target.x and new_y != target y:
+            #        new_x = int(round(dx / distance))
+            #        new_y = int(round(dy / distance))
+                                #self.move(dx, dy)
+                    #for objects in objectlist
+            #            if object.x = new_x and object.y = new_y
+                            #add object to a new list
+
+            #    return(target_x, target_y, distance, other_people_in way)
+            
+            #else:
+            #    render_all()
+            #    libtcod.console_flush()
+            #    msgbox("Target is out of sight")
+        
+        #def cone_target(self)
+        #    "Code for visual outline"
+        #    "return(list? of every item in area) Then actual code later will check if flamable, etc
+
+>>>>>>> bfcbbd23f3d2e02454a65254c7d9d66f58b4a761
 
 class Object:
     #this is a generic object: the player, a monster, an item, the stairs...
@@ -258,7 +349,7 @@ class Fighter:
         if self.hp > self.max_hp:
             self.hp = self.max_hp
  
-class BasicMonster:
+class BasicMonsterAI:
     #AI for a basic monster.
     def take_turn(self):
         #a basic monster takes its turn. if you can see it, it can see you
@@ -273,8 +364,9 @@ class BasicMonster:
             elif player.fighter.hp > 0:
                 monster.fighter.attack(player)
 
-class Archer:
+class ArcherAI:
     #AI for a basic monster.
+    #Is this really the place for attack distance???  I think it should be in combat logic maybe.  Or maybe make it a @
     def __init__(self, attack_distance):
         self.attack_distance = attack_distance
 
@@ -294,7 +386,7 @@ class Archer:
             elif player.fighter.hp > 0:
                 monster.fighter.attack(player)
 
-class Necromancer:
+class NecromancerAI:
     #AI for a necromancer.
     def __init__(self, attack_distance):
         self.attack_distance = attack_distance
@@ -353,7 +445,7 @@ class Necromancer:
                 
                 if is_blocked(x,y) != True:
                     fighter_component = Fighter(hp=1, defense=2, power=5, xp=0, death_function=summoned_death)
-                    ai_component = BasicMonster()
+                    ai_component = BasicMonsterAI()
                     
                     monster = Object(x, y, "s", 'skeleton', libtcod.gray,
                         blocks=True, fighter=fighter_component, ai=ai_component,summoner=self)
@@ -379,12 +471,6 @@ class ConfusedMonster:
         else:  #restore the previous AI (this one will be deleted because it's not referenced anymore)
             self.owner.ai = self.old_ai
             message('The ' + self.owner.name + ' is no longer confused!', libtcod.red)
- 
-#class Skill:
-    #the abilities that the player gets on level up
-#    def __init__(self):
-    
-
 
 class Item:
     #an item that can be picked up and used.
@@ -406,9 +492,9 @@ class Item:
                 equipment.equip()
  
     def drop(self):
-        #special case: if the object has the Equipment component, dequip it before dropping
+        #special case: if the object has the Equipment component, unequip it before dropping
         if self.owner.equipment:
-            self.owner.equipment.dequip()
+            self.owner.equipment.unequip()
  
         #add to the map and remove from the player's inventory. also, place it at the player's coordinates
         objects.append(self.owner)
@@ -418,7 +504,7 @@ class Item:
         message('You dropped a ' + self.owner.name + '.', libtcod.yellow)
  
     def use(self):
-        #special case: if the object has the Equipment component, the "use" action is to equip/dequip
+        #special case: if the object has the Equipment component, the "use" action is to equip/unequip
         if self.owner.equipment:
             self.owner.equipment.toggle_equip()
             return
@@ -435,32 +521,31 @@ class Equipment:
     def __init__(self, slot, power_bonus=0, defense_bonus=0, max_hp_bonus=0):
         self.power_bonus = power_bonus
         self.defense_bonus = defense_bonus
-        self.max_hp_bonus = max_hp_bonus
- 
+        self.max_hp_bonus = max_hp_bonus 
         self.slot = slot
         self.is_equipped = False
  
-    def toggle_equip(self):  #toggle equip/dequip status
+    def toggle_equip(self):  #toggle equip/unequip status
         if self.is_equipped:
-            self.dequip()
+            self.unequip()
         else:
             self.equip()
  
     def equip(self):
-        #if the slot is already being used, dequip whatever is there first
+        #if the slot is already being used, unequip whatever is there first
         old_equipment = get_equipped_in_slot(self.slot)
         if old_equipment is not None:
-            old_equipment.dequip()
+            old_equipment.unequip()
  
         #equip object and show a message about it
         self.is_equipped = True
         message('Equipped ' + self.owner.name + ' on ' + self.slot + '.', libtcod.light_green)
  
-    def dequip(self):
-        #dequip object and show a message about it
+    def unequip(self):
+        #unequip object and show a message about it
         if not self.is_equipped: return
         self.is_equipped = False
-        message('Dequipped ' + self.owner.name + ' from ' + self.slot + '.', libtcod.light_yellow)
+        message('Unequipped ' + self.owner.name + ' from ' + self.slot + '.', libtcod.light_yellow)
  
  
 def get_equipped_in_slot(slot):  #returns the equipment in a slot, or None if it's empty
@@ -636,7 +721,7 @@ def place_objects(room):
     monster_chances = {}
     monster_chances['orc'] = 80  #orc always shows up, even if all other monsters have 0 chance
     monster_chances['goblin archer'] = 20
-    monster_chances['necromancer'] = 10
+    monster_chances['necromancer'] = from_dungeon_level([[15, 2], [30, 4], [60, 6]])
     monster_chances['troll'] = from_dungeon_level([[15, 3], [30, 5], [60, 7]])
 
     #maximum number of items per room
@@ -666,7 +751,7 @@ def place_objects(room):
             if choice == 'orc':
                 #create an orc
                 fighter_component = Fighter(hp=20, defense=0, power=4, xp=35, death_function=monster_death)
-                ai_component = BasicMonster()
+                ai_component = BasicMonsterAI()
  
                 monster = Object(x, y, orc_tile, 'orc', libtcod.desaturated_green,
                                  blocks=False, fighter=fighter_component, ai=ai_component)
@@ -674,7 +759,7 @@ def place_objects(room):
             elif choice == 'troll':
                 #create a troll
                 fighter_component = Fighter(hp=30, defense=2, power=8, xp=100, death_function=monster_death)
-                ai_component = BasicMonster()
+                ai_component = BasicMonsterAI()
  
                 monster = Object(x, y, troll_tile, 'troll', libtcod.darker_green,
                                  blocks=True, fighter=fighter_component, ai=ai_component)
@@ -682,7 +767,7 @@ def place_objects(room):
             elif choice == 'goblin archer':
                 #create a goblin archer
                 fighter_component = Fighter(hp=10, defense=1, power=1, xp=45, death_function=monster_death)
-                ai_component = Archer(attack_distance=5)
+                ai_component = ArcherAI(attack_distance=5)
                 
                 monster = Object(x, y, 'g', 'goblin archer', libtcod.desaturated_green,
                                  blocks=True, fighter=fighter_component, ai=ai_component)
@@ -690,7 +775,7 @@ def place_objects(room):
             elif choice == 'necromancer':
                 #create a necromancer
                 fighter_component = Fighter(hp=10, defense=1, power=1, xp=180, death_function=monster_death)
-                ai_component = Necromancer(attack_distance=5)
+                ai_component = NecromancerAI(attack_distance=5)
                 
                 monster = Object(x, y, 'n', 'necromancer', libtcod.desaturated_red,
                                  blocks=True, fighter=fighter_component, ai=ai_component)
@@ -853,7 +938,24 @@ def message(new_msg, color = libtcod.white):
         #add the new line as a tuple, with the text and the color
         game_msgs.append( (line, color) )
  
+def check_skill_target(dx, dy):
+    #the coordinates the player is moving to/attacking
+    x = player.x + dx
+    y = player.y + dy
  
+    #try to find an attackable object there
+    target = None
+    for object in objects:
+        if object.fighter and object.x == x and object.y == y:
+            target = object
+            break
+ 
+    #attack if target found, move otherwise
+    if target is not None:
+        return target
+    else:
+        return None 
+
 def player_move_or_attack(dx, dy):
     global fov_recompute
  
@@ -951,12 +1053,19 @@ def skill_menu(header):
     index = menu(header, options, INVENTORY_WIDTH)
  
     #if an skill was chosen, return it
-    if index is None or len(skill_list) == 0: return None
-    elif index is Thorns:
+    if options is None or len(skill_list) == 0: return None
+    elif options is 'Thorns':
         render_all()
         libtcod.console_flush()
         msgbox("Thorns activates automatically when you are hit")
         return None
+    
+    elif options is 'Burning Touch':
+        #burning_touch(6)
+        return None
+    else:
+        return None
+     
     return skill_list[index]
 
 def msgbox(text, width=50):
@@ -1064,6 +1173,7 @@ def check_level_up():
  
         skill_choice = None
         while skill_choice == None:  #keep asking until a choice is made
+<<<<<<< HEAD
             skill_choice = menu(available_skill_list, LEVEL_SCREEN_WIDTH)
         
         if available_skill_list[skill_choice] == 'Firebreath':
@@ -1074,6 +1184,18 @@ def check_level_up():
             skill_list.append('Thorn Armor')
             available_skill_list.remove('Thorn Armor')   
         elif available_skill_list[skill_choice] == 'Regeneration':
+=======
+            skill_choice = menu('Now choose a skill to raise:\n',
+                          ['Burning Touch',
+                           'Thorn Armor (damage enemies when hit)',
+                           'Regeneration (Slow life regen)'], LEVEL_SCREEN_WIDTH)
+        
+        if skill_choice == 0:
+            skill_list.append('Burning Touch')
+        elif skill_choice == 1:
+            skill_list.append('Thorn Armor')    
+        elif skill_choice == 2:
+>>>>>>> bfcbbd23f3d2e02454a65254c7d9d66f58b4a761
             skill_list.append('Regeneration')
             available_skill_list.remove('Regeneration')
             available_skill_list.append('Heal')
