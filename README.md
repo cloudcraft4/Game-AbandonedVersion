@@ -1,7 +1,7 @@
 # "Untitled" Roguelike-Game
 
 This is the pre-Alpha version of my new roguelike game (which I am making purely for my own enjoyment).  
-The game is extremely bare-bones at the moment but I hope to get it to a state that at least I enjoy. :)
+I have abandoned this version because I want to be working with Python 3.  For now I am keeping this in case I want to look at what I previously did.
 
 Much thanks to João F. Henriques for his excelent tutorial on how to make roguelikes in Python.
 
